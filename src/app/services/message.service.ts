@@ -23,6 +23,7 @@ export class MessageService {
   private changeWishToCart = new Subject<any>();
   private changeWishSource = new Subject<any>();
   private wishItemSource = new Subject<number>();
+  private orderIdService = new Subject<any>();
   currentNewlyAdded = this.messageOnNewlyAdded.asObservable();
   currentDisapproved = this.messageOnDisapproved.asObservable();
   currentApproved = this.messageOnApproved.asObservable();
@@ -35,6 +36,8 @@ export class MessageService {
   currentWishItem$ = this.wishItemSource.asObservable();
   currentWishBooks$ = this.changeWishSource.asObservable();
   currentWishToCart$ = this.changeWishToCart.asObservable();
+  currentOrderId$ = this.orderIdService.asObservable();
+
 
   constructor(
     private vendorService: SellerService,
@@ -106,5 +109,9 @@ export class MessageService {
 
   changeWishCart(book: any) {
     this.changeWishToCart.next(book);
+  }
+
+  changeOrderId(data: any) {
+    this.orderIdService.next(data);
   }
 }

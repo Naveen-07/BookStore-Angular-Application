@@ -4,32 +4,32 @@
 
 export const environment = {
   production: true,
-  baseUrl: "http://localhost:8081",
-  loginPath: "/user/login",
-  registrationPath: "/user/register",
-  forgotPasswordPath: "/user/forgotpassword",
-  resetPasswordPath: "/user/resetpassword?token=",
+  baseUrl: 'http://localhost:8081',
+  loginPath: '/user/login',
+  registrationPath: '/user/register',
+  forgotPasswordPath: '/user/forgotpassword',
+  resetPasswordPath: '/user/resetpassword?token=',
 
 
-  bookApiUrl: "http://localhost:8081/books",
-  getBooksList: "getAllBooks",
-  getSellerBookList: "sellerBooks",
-  addbook: "add",
-  deleteBook: "delete",
-  addBookImage: "upload",
+  bookApiUrl: 'http://localhost:8081/books',
+  getBooksList: 'getAllBooks',
+  getSellerBookList: 'sellerBooks',
+  addbook: 'add',
+  deleteBook: 'delete',
+  addBookImage: 'upload',
 
 
 
-  cartApiUrl: "http://localhost:8081/orders",
-  addToBag: "AddToCart",
-  cartList: "cart-list",
-  deleteOrder: "remove-order",
-  updateQuantity: "update-quantity",
-  confirmOrder: "confirm-order",
-  profilePicPath: "/user/uploadFile",
-  bookPicPath: "/sellers/uploadFile",
-  addBookPath: "/sellers/addBook",
-  addimg:'/sellers/addImg'
+  cartApiUrl: 'http://localhost:8081/user',
+  addToBag: 'AddToCart',
+  cartList: 'getAllFromCart',
+  deleteOrder: 'remove-order',
+  updateQuantity: 'update-quantity',
+  confirmOrder: 'confirm-order',
+  profilePicPath: '/user/uploadFile',
+  bookPicPath: '/sellers/uploadFile',
+  addBookPath: '/sellers/addBook',
+  addimg: '/sellers/addImg'
 };
 
 /*

@@ -12,6 +12,7 @@ import {Router} from '@angular/router';
 import {WishlistComponent} from '../wishlist/wishlist.component';
 import {CartserviceService} from 'src/app/services/cartservice.service';
 import {WishlistService} from '../../services/wishlist.service';
+import {SocialAuthService} from 'angularx-social-login';
 
 @Component({
   selector: 'app-user',
@@ -41,7 +42,7 @@ export class UserComponent implements OnInit {
     private router: Router,
     private cartServices: CartserviceService,
     private data: MessageService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
   ) {
   }
 
@@ -51,7 +52,7 @@ export class UserComponent implements OnInit {
     } else {
       this.isImage = true;
     }
-    if (localStorage.getItem('token') != null && localStorage.getItem('roleType') === 'USER') {
+    if (localStorage.getItem('token') !== null) {
       this.getAllBookOfWL();
       this.messageService.changeCartBook();
       this.data.changeItem(1);
@@ -114,6 +115,7 @@ export class UserComponent implements OnInit {
       width: '28%',
       height: 'auto'
     });
+    this.assignCartToUser();
   }
 
   signup() {
@@ -132,6 +134,9 @@ export class UserComponent implements OnInit {
   }
 
   Logout() {
+    // if (localStorage.getItem('loginType') === 'SOCIAL'){
+    //     this.authService.signOut();
+    //   }
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key[0] === 'c') {
@@ -142,10 +147,10 @@ export class UserComponent implements OnInit {
     }
 
 
-    this.img = localStorage.getItem(localStorage.getItem('email'));
+    // this.img = localStorage.getItem(localStorage.getItem('email'));
     localStorage.clear();
     sessionStorage.clear();
-    localStorage.setItem(this.usermail, this.img);
+    // localStorage.setItem(this.usermail, this.img);
     location.reload();
   }
 
@@ -184,6 +189,18 @@ export class UserComponent implements OnInit {
       });
     } else {
       this.signin();
+    }
+  }
+
+  public assignCartToUser() {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key[0] === 'c') {
+        const obj = JSON.parse(localStorage.getItem(key));
+        const bookId = key.substring(1, key.length);
+        this.cartServices.addToBag(obj, bookId).subscribe((message) => {
+        });
+      }
     }
   }
 }

@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import {OrderconfirmationService} from "../../services/orderConfirmation/orderconfirmation.service";
-import { LoginComponent } from '../login/login.component';
-import { RegisterComponent } from '../register/register.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserService } from 'src/app/services/user.service';
-import { MessageService } from 'src/app/services/message.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Router } from '@angular/router';
-import { CartserviceService } from 'src/app/services/cartservice.service';
-import { WishlistService } from 'src/app/services/wishlist.service';
+import {Component, OnInit} from '@angular/core';
+import {OrderconfirmationService} from '../../services/orderConfirmation/orderconfirmation.service';
+import {LoginComponent} from '../login/login.component';
+import {RegisterComponent} from '../register/register.component';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {UserService} from 'src/app/services/user.service';
+import {MessageService} from 'src/app/services/message.service';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {Router} from '@angular/router';
+import {CartserviceService} from 'src/app/services/cartservice.service';
+import {WishlistService} from 'src/app/services/wishlist.service';
 
 @Component({
   selector: 'app-order-confirmation',
@@ -32,8 +32,10 @@ export class OrderConfirmationComponent implements OnInit {
   usermail: string;
   item: any;
   wishitem: any;
+  orderId: any;
+
   constructor(
-    private ordercinfirmation : OrderconfirmationService,
+    private ordercinfirmation: OrderconfirmationService,
     private dialog: MatDialog,
     public snackbar: MatSnackBar,
     private userService: UserService,
@@ -42,9 +44,11 @@ export class OrderConfirmationComponent implements OnInit {
     private router: Router,
     private cartServices: CartserviceService,
     private data: MessageService,
-    private wishlistService: WishlistService) { }
+    private wishlistService: WishlistService) {
+  }
 
   ngOnInit() {
+    this.orderId = +localStorage.getItem('orderId');
     this.messageService.changeMessages();
     if (localStorage.getItem(localStorage.getItem('email')) == null) {
       this.isImage = false;
@@ -83,14 +87,14 @@ export class OrderConfirmationComponent implements OnInit {
   }
 
   Logout() {
-    for (let i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
-      if (key[0] == 'c') {
-        var obj = JSON.parse(localStorage.getItem(key));
-        this.cartServices.addToBag(obj, key[1]).subscribe((message) => {
-        });
-      }
-    }
+    // for (let i = 0; i < localStorage.length; i++) {
+    //   const key = localStorage.key(i);
+    //   if (key[0] === 'c') {
+    //     const obj = JSON.parse(localStorage.getItem(key));
+    //     this.cartServices.addToBag(obj, key[1]).subscribe((message) => {
+    //     });
+    //   }
+    // }
     this.img = localStorage.getItem(localStorage.getItem('email'));
     localStorage.clear();
     sessionStorage.clear();
@@ -125,18 +129,8 @@ export class OrderConfirmationComponent implements OnInit {
       });
   }
 
-  fetchOrderId(){
-   // order_id: number
-   let orderId = sessionStorage.getItem("orderId");
-   sessionStorage.clear();
-   console.log(orderId);
-    return '#'+orderId;
-  }
-  getOrderId(){
-    //   this.ordercinfirmation.fetchOrderId().subscribe((response:any) => {
-    //     this.orderId = response;
-    //     console.log("id", response)
-    //  });
-    
+  fetchOrderId(): any {
+    console.log(this.orderId);
+    return '#' + +localStorage.getItem('orderId');
   }
 }

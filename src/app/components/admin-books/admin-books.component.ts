@@ -87,7 +87,6 @@ export class AdminBooksComponent implements OnInit {
     };
     const dialogRef = this.dialog.open(VerifydialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
-      //this.books.splice(0);
       this.ngOnInit();
     });
   }
@@ -106,8 +105,7 @@ export class AdminBooksComponent implements OnInit {
     };
     const dialogRef = this.dialog.open(VerifydialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((result) => {
-      //this.books.splice(0);
-      this.ngOnInit();
+      this.books.splice(0);
     });
   }
 }

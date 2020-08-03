@@ -35,11 +35,11 @@ export class UpdateBookComponent implements OnInit {
   ) {}
 
   bookForm = new FormGroup({
-    bookName: new FormControl('',Validators.pattern("[a-zA-Z\s]{3,}")),
-    authorName: new FormControl('',Validators.pattern("^[A-Z][a-z\s]{2,}")),
+    bookName: new FormControl('',Validators.pattern("[a-zA-Z0-9\\s]{3,}")),
+    authorName: new FormControl('',Validators.pattern("^[A-Z][a-zA-Z\\s]{2,}")),
     price: new FormControl('',Validators.min(0)),
     quantity: new FormControl('',Validators.pattern("^[1-9][0,9]{0,}")),
-    description: new FormControl('',Validators.pattern("[a-zA-Z\s]{3,}")),
+    description: new FormControl('',Validators.pattern("[a-zA-Z0-9\\s]{3,}")),
   });
   ngOnInit() {}
   validate(){
@@ -85,7 +85,7 @@ export class UpdateBookComponent implements OnInit {
       this.book.bookDetails = this.data.bookDetails;
     }else{
       this.book.bookDetails = this.bookForm.value.description;
-    }  
+    }
     console.log("book data ",this.book);
     this.vendorService.updateBook(this.book,this.data.bookId).subscribe(
       (data) => {

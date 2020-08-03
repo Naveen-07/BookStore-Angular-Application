@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -37,17 +36,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { AppMaterial } from './app.material.module';
 import { AsyncPipe } from '../../node_modules/@angular/common';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RegisterComponent } from './components/register/register.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { OrderConfirmationComponent } from './components/order-confirmation/order-confirmation.component';
-//import { DashboardComponent } from './dashboard/dashboard.component';
-//import { DashboardComponent } from './components/dashboard/dashboard.component';
-//import { DisplaybooksComponent } from './components/displaybooks/displaybooks.component';
-//import { BookSearchPipe } from './pipe/book-search.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
-//import { UserBooksComponent } from './components/user-books/user-books.component';
 import { ForgotpasswordComponent } from './components/forgotpassword/forgotpassword.component';
 import { ResetpasswordComponent } from './components/resetpassword/resetpassword.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -63,6 +56,33 @@ import { SellersListComponent } from './components/sellers-list/sellers-list.com
 import { WishlistComponent } from './components/wishlist/wishlist.component';
 import { VerificationComponent } from './components/verification/verification.component';
 import { BookRejectionComponent } from './components/bookRejection/bookRejection.component';
+import {SocialLoginModule, AuthServiceConfig, FacebookLoginProvider, GoogleLoginProvider, LinkedinLoginProvider} from 'ng-social-login-module';
+// import * as firebase from 'firebase';
+// import TwitterAuthProvider = firebase.auth.TwitterAuthProvider;
+
+const config = new AuthServiceConfig(
+  [
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider(
+        '511931713819-klkecibn7sikbtm9hcp3ptfh5omm73v7.apps.googleusercontent.com'
+      )
+    },
+    {
+      id: FacebookLoginProvider.PROVIDER_ID,
+      provider: new FacebookLoginProvider('604139767205069')
+    },
+    {
+      id: LinkedinLoginProvider.PROVIDER_ID,
+      provider: new LinkedinLoginProvider("86s0f5lfcv3x12")
+    }
+  ],
+  false
+);
+export function provideConfig() {
+  return config;
+}
+
 
 @NgModule({
   declarations: [
@@ -73,15 +93,10 @@ import { BookRejectionComponent } from './components/bookRejection/bookRejection
     AdminsComponent,
     OrderConfirmationComponent,
     SellersListComponent,
-    //  DashboardComponent,
     RegisterComponent,
-    //   DashboardComponent,
-    //  DisplaybooksComponent,
-    //  BookSearchPipe,
     SortbypricePipe,
     BookFilterPipe,
     SellerSearchPipe,
-    //  UserBooksComponent,
     ForgotpasswordComponent,
     ResetpasswordComponent,
     SellerComponent,
@@ -124,8 +139,11 @@ import { BookRejectionComponent } from './components/bookRejection/bookRejection
     MatSortModule,
     NgxPaginationModule,
     MatPaginatorModule,
+    SocialLoginModule,
   ],
   providers: [
+    {provide: AuthServiceConfig,
+    useFactory: provideConfig},
     AsyncPipe,
     UserService,
     SellerService,

@@ -19,23 +19,18 @@ export class CartserviceService {
   }
   constructor(private http: HttpClient, private httpservice: HttpService) {}
 
-/*addToBag(id:any): Observable<any> {
-    console.log(id);
-    return this.httpservice.addtoCart("http://localhost:8081/user/AddToCart?bookId="+id)
-      
-  }*/
 
-  addToBag(cartBook:any,bookId:any): Observable<any> {
-    var httpOptions = {
-      headers: new HttpHeaders({ "Content-Type": "application/json",token: localStorage.getItem("token") })
+  addToBag(cartBook: any, bookId: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json', token: localStorage.getItem('token') })
     };
-    return this.http.post("http://localhost:8081/user/AddToCart/" + bookId, cartBook, httpOptions);  
+    return this.http.post('http://localhost:8081/user/AddToCart/' + bookId, cartBook, httpOptions);
   }
   removeFromeBag(id): Observable<any> {
     return this.httpservice
       .delete(
         `${environment.cartApiUrl}/${environment.deleteOrder}?bookId=${id}`,
-        { headers: new HttpHeaders().set("token", sessionStorage.token) }
+        { headers: new HttpHeaders().set('token', sessionStorage.token) }
       )
       .pipe(
         tap(() => {
@@ -47,13 +42,13 @@ export class CartserviceService {
   getCartList(): Observable<any> {
     return this.httpservice.get(
       `${environment.cartApiUrl}/${environment.cartList}`,
-      { headers: new HttpHeaders().set("token", sessionStorage.token) }
+      { headers: new HttpHeaders().set('token', sessionStorage.token) }
     );
   }
   updateOrderQuantity(order): Observable<any> {
     return this.httpservice
       .put(`${environment.cartApiUrl}/${environment.updateQuantity}`, order, {
-        headers: new HttpHeaders().set("token", sessionStorage.token),
+        headers: new HttpHeaders().set('token', sessionStorage.token),
       })
       .pipe(
         tap(() => {
@@ -65,7 +60,7 @@ export class CartserviceService {
     console.log(order);
     return this.httpservice
       .put(`${environment.cartApiUrl}/${environment.confirmOrder}`, order, {
-        headers: new HttpHeaders().set("token", sessionStorage.token),
+        headers: new HttpHeaders().set('token', sessionStorage.token),
       })
       .pipe(
         tap(() => {

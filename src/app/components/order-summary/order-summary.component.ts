@@ -38,9 +38,7 @@ export class OrderSummaryComponent implements OnInit {
   city: any;
   landMark: any;
   locationType: any;
-  actualPrice: Number;
   totalPrice: number = 0;
-  isBookFormOpened = false;
   searchTerm: string;
   file: any;
   profile: string;
@@ -51,17 +49,14 @@ export class OrderSummaryComponent implements OnInit {
   img = 'https://ravi023.s3.ap-south-1.amazonaws.com/1594052103459-profile.png';
   username: string;
   usermail: string;
-  item: any;
-  wishitem: any;
-
-  // books: any;
-  person: String;
+  person: string;
   token: string;
   cartQuantity: any;
   cartPrice: any;
   itemQuantity: any;
   isEmpty: any;
   isAvailable: any;
+  orderId: any;
 
   constructor(public formBuilder: FormBuilder,
               private dialog: MatDialog,
@@ -214,16 +209,15 @@ export class OrderSummaryComponent implements OnInit {
   }
 
   onDisplayBooks(data) {
-    data.forEach((bookData) => {
-      localStorage.setItem('c' + bookData.bookId, JSON.stringify(bookData));
-      sessionStorage.setItem(bookData.bookId, bookData.bookId);
-    });
+    if (localStorage.getItem('token') !== null && localStorage.getItem('roleType') === 'USER'){
+      this.getAllCartBook();
+    }
   }
 
 
   onPopup() {
     if (this.size >= 1) {
-      if (localStorage.getItem('token') !== null && localStorage.getItem('roleType') !== 'USER') {
+      if (localStorage.getItem('token') === null || localStorage.getItem('token') !== null && localStorage.getItem('roleType') !== 'USER') {
         this.dialog.open(LoginComponent, {
           width: '28%',
           height: 'auto'
@@ -231,35 +225,36 @@ export class OrderSummaryComponent implements OnInit {
       }
       this.popup = true;
       this.popDown = true;
-    }
-    this.show = true;
-    for (let i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
-      if (key[0] === 'c') {
-        var obj = JSON.parse(localStorage.getItem(key));
-        this.totalPrice = this.totalPrice + +obj.totalPrice;
-        console.log(this.totalPrice);
-        console.log(obj);
-        this.cartServices.addToBag(obj, key[1]).subscribe((message) => {
-        });
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key[0] === 'c') {
+          const obj = JSON.parse(localStorage.getItem(key));
+          this.totalPrice = this.totalPrice + +obj.totalPrice;
+          console.log(this.totalPrice);
+          console.log(obj);
+          const bookId = key.substring(1, key.length);
+          this.cartServices.addToBag(obj, bookId).subscribe((message) => {
+          });
+        }
       }
     }
+    this.show = true;
     this.populateUserDetails('home');
   }
 
   populateUserDetails(locationType: any) {
     for (let i = 0; i < 7; i++) {
       this.customerDetailsService.getUserDetails().subscribe((response: any) => {
-        if (locationType == 'home' && response.userDetailsList.length == 0) {
+        if (locationType === 'home' && response.userDetailsList.length == 0) {
           return;
         }
-        if (locationType == 'work' && response.userDetailsList.length == 1) {
+        if (locationType === 'work' && response.userDetailsList.length == 1) {
           return;
         }
-        if (locationType == 'other' && response.userDetailsList.length == 2) {
+        if (locationType === 'other' && response.userDetailsList.length == 2) {
           return;
         }
-        if (locationType == 'home' && response.userDetailsList[0] != null) {
+        if (locationType === 'home' && response.userDetailsList[0] != null) {
           this.registerForm.value.fullName = response.userDetailsList[0].fullName;
           this.registerForm.value.phoneNumber = response.userDetailsList[0].phoneNumber;
           this.registerForm.value.locality = response.userDetailsList[0].locality;
@@ -269,7 +264,7 @@ export class OrderSummaryComponent implements OnInit {
           this.registerForm.value.landMark = response.userDetailsList[0].landMark;
 
         }
-        if (locationType == 'work' && response.userDetailsList[1] != null) {
+        if (locationType === 'work' && response.userDetailsList[1] != null) {
           this.registerForm.value.fullName = response.userDetailsList[1].fullName;
           this.registerForm.value.phoneNumber = response.userDetailsList[1].phoneNumber;
           this.registerForm.value.locality = response.userDetailsList[1].locality;
@@ -278,7 +273,7 @@ export class OrderSummaryComponent implements OnInit {
           this.registerForm.value.city = response.userDetailsList[1].city;
           this.registerForm.value.landMark = response.userDetailsList[1].landMark;
         }
-        if (locationType == 'other' && response.userDetailsList[2] != null) {
+        if (locationType === 'other' && response.userDetailsList[2] != null) {
           this.registerForm.value.fullName = response.userDetailsList[2].fullName;
           this.registerForm.value.phoneNumber = response.userDetailsList[2].phoneNumber;
           this.registerForm.value.locality = response.userDetailsList[2].locality;
@@ -307,7 +302,6 @@ export class OrderSummaryComponent implements OnInit {
 
 
   increaseQuantity(book: any) {
-    // let fixPric =  book.totalPrice/;
     if (book.quantity > 0) {
       book.quantity++;
       book.totalPrice = (book.totalPrice / (book.quantity - 1)) * book.quantity;
@@ -375,43 +369,38 @@ export class OrderSummaryComponent implements OnInit {
     this.order = true;
   }
 
-  userId = 1;
-
   checkout() {
-    this.cartService.sendMail().subscribe((response: any) => {
-      sessionStorage.setItem('orderId', response.data);
+    this.cartService.sendMail().subscribe(response => {
+      this.orderId = response.orderId;
+      localStorage.setItem('orderId' , response.orderId);
+      console.log('orderId',  this.orderId);
     });
-    let token = localStorage.getItem('token');
-    let emailId = localStorage.getItem('email');
-    let name = localStorage.getItem('name');
-    let img = localStorage.getItem(localStorage.getItem('email'));
-    let roleType = localStorage.getItem('roleType');
+    const token = localStorage.getItem('token');
+    const emailId = localStorage.getItem('email');
+    const name = localStorage.getItem('name');
+    const img = localStorage.getItem(localStorage.getItem('email'));
+    const roleType = localStorage.getItem('roleType');
+    const order = localStorage.getItem('orderId');
     this.cartService.removeAll().subscribe((response: any) => {
       localStorage.clear();
       localStorage.setItem('token', token);
       localStorage.setItem('email', emailId);
+      localStorage.setItem('orderId', order);
       localStorage.setItem('name', name);
-      localStorage.setItem(emailId, img);
+      localStorage.setItem(localStorage.getItem('email'), img);
       localStorage.setItem('roleType', roleType);
-      //  console.log("response", response);
-      //  sessionStorage.clear();
-      //  this.afterCheckout = "true";
-      //  localStorage.setItem("checkout status", this.afterCheckout);
-      //  this.getAllBookCart();
       this.router.navigate(['/order-confirmation']);
     });
   }
 
-  // onChange(mrChange: MatRadioChange) {
-  //   console.log(mrChange.value);
-  //   this.person = mrChange.value;
-  //   console.log(this.person);
-
-  // }
   onChange(val: any) {
     this.sortTerm = val;
     this.person = this.sortTerm;
     localStorage.setItem('locationType', this.sortTerm);
     this.populateUserDetails(this.sortTerm.value);
+  }
+
+  private getAllCartBook() {
+    this.cartServices.getCartList()
   }
 }
